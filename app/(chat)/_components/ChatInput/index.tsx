@@ -6,13 +6,12 @@ import { Button, Group, Stack, TextInput } from "@mantine/core";
 
 import { IconSend, IconSettings } from "@tabler/icons-react";
 
-import { Message } from "chat/_models";
+import { Message } from "(chat)/_models";
 
 import ChatNumeric from "./ChatNumeric";
 import ChatChoices from "./ChatChoices";
 
 import classes from "./chat-input.module.css";
-
 
 interface ChatInputProps {
     isLoading: boolean;

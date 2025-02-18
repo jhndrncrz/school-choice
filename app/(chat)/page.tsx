@@ -138,7 +138,7 @@ export default function Page() {
                         <RingProgress
                             label={
                                 <Text size="2rem" ta="center" fw="bold">
-                                    {100 * Object.values(questionPointer?.result!).toSorted((a, b) => a - b).toReversed()[0] / Object.values(questionPointer?.result!).reduce((partialSum, a) => partialSum + a, 0)}%
+                                    {(100 * Object.values(questionPointer?.result!).toSorted((a, b) => a - b).toReversed()[0] / Object.values(questionPointer?.result!).reduce((partialSum, a) => partialSum + a, 0)).toFixed(2)}%
                                 </Text>
                             }
                             size={200}

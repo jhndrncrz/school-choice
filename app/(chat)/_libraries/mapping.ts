@@ -1,4 +1,4 @@
-const mapping = {
+const mapping: Record<string, string> = {
     extremely_considered: "extremely considering",
     high_consideration: "with high consideration",
     moderate_consideration: "moderately considering",

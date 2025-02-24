@@ -1,4 +1,4 @@
-export default interface Result {
+export default interface Result extends Record<string, number> {
     extremely_considered: number, 
     high_consideration: number, 
     moderate_consideration: number,

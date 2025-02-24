@@ -154,7 +154,7 @@ export default function Page() {
                             ]}
                         />  
                         <Text>
-                            likely to be <Text component="span" fw="bold">{mapping[(Object.keys(questionPointer?.result ?? {}).reduce((a, b) => (questionPointer?.result?.[a]) > questionPointer?.result?.[b] ? a : b))]}</Text> to enroll in University of the East!
+                            likely to be <Text component="span" fw="bold">{mapping[(Object.keys(questionPointer?.result ?? {failed: "error"}).reduce((a, b) => (questionPointer?.result?.[a]!) > questionPointer?.result?.[b]! ? a : b))]}</Text> to enroll in University of the East!
                         </Text>
                     </Stack>
 

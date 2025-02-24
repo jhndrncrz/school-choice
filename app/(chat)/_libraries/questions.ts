@@ -2,6 +2,7 @@ import { Question } from "(chat)/_models";
 
 const CHOICES = {
   GENDER: ["Male", "Female"],
+  NO_CHOICE: ["Yes"],
   CONFIRMATION: ["Yes", "No"],
   CHANCE: [
     "Extremely likely",
@@ -125,7 +126,7 @@ const QUESTION_BANK = {
   END: {
     question: "I have no more questions! Do you want to see your results now?",
     type: "choice",
-    choices: CHOICES.CONFIRMATION,
+    choices: CHOICES.NO_CHOICE,
     parameter: "end",
     fallback: "You've reached the end now...",
   },

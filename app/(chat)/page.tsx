@@ -5,7 +5,7 @@ import { Badge, Divider, Group, Loader, Modal, Paper, RingProgress, Stack, Table
 
 import { ChatBox, ChatInput } from "./_components";
 import { Message, Question } from "./_models";
-import { questions } from "./_libraries";
+import { mapping, questions } from "./_libraries";
 
 export default function Page() {
     const [isDone, setIsDone] = useState(false);
@@ -29,17 +29,19 @@ export default function Page() {
     }
 
     // Function to handle user's response
-    function handleUserResponse(question: Question, newMessage: Message) {
+    function handleUserResponse(question: Question, newMessage: Message, answered: {question: string, answer: string}[]) {
+        console.log("Question: ", question);
+        console.log("Response: ",newMessage);
+        console.log("Answered Questions: ", answeredQuestions);
+        console.log("---------------------");
+
+
         if (newMessage.author != "REPEAT") {
             addNewMessage(newMessage);
             const newAnswer = { question: question.question, answer: newMessage.content };
-            setAnsweredQuestions((prev) => [...prev, newAnswer]);
+            answered.push(newAnswer);
+            setAnsweredQuestions((prev) => answered);
         }
-
-        console.log("----------------------");
-        console.log("QUESTION: ", question);
-        console.log("MESSAGE: ", newMessage);
-        console.log("----------------------");
 
         // Check if the answer matches either left or right path
         const nextQuestion =
@@ -47,16 +49,12 @@ export default function Page() {
                 question.right?.answer.includes(newMessage.content) ? question.right :
                     null;
 
-        console.log("NEXT: ", nextQuestion);
-        console.log("----------------------");
-
         if (nextQuestion) {
-            const previousAnswer = answeredQuestions.find((a) => a.question === nextQuestion.question);
+            const previousAnswer = answered.find((a) => a.question === nextQuestion.question);
 
             if (previousAnswer) {
                 // addNewMessage({ author: "You", content: previousAnswer.answer, date: new Date() });
-                addNewMessage({ author: "Lua", content: `Next: ${nextQuestion.question} --- Wait... ${nextQuestion.fallback}`, date: new Date() });
-                console.log("REPEATING!");
+                addNewMessage({ author: "Lua", content: `${nextQuestion.question} - Wait... ${nextQuestion.fallback}`, date: new Date() });
 
                 setQuestionPointer(nextQuestion);
 
@@ -66,7 +64,9 @@ export default function Page() {
                         author: "REPEAT",
                         content: previousAnswer.answer,
                         date: new Date()
-                    });
+                    },
+                    answered
+                );
             } else {
                 setQuestionPointer(nextQuestion);
                 askNewQuestion(nextQuestion);
@@ -122,7 +122,7 @@ export default function Page() {
                             isLoading={isLoading}
                             type={questionPointer?.type}
                             choices={questionPointer.choices}
-                            onSubmit={(newMessage: Message) => handleUserResponse(questionPointer, newMessage)}
+                            onSubmit={(newMessage: Message) => handleUserResponse(questionPointer, newMessage, answeredQuestions)}
                         />
                     </Paper>
                 )}
@@ -133,7 +133,7 @@ export default function Page() {
                 <Modal centered opened={isDone} onClose={() => { }} title={<Text size="xl" fw="bold">View Results</Text>} withCloseButton={false}>
                     <Stack align="center">
                         <Text>
-                            You are most likely...
+                            You are...
                         </Text>
                         <RingProgress
                             label={
@@ -152,9 +152,9 @@ export default function Page() {
                                 { value: 100 * questionPointer?.result?.not_at_all_considered! / Object.values(questionPointer?.result!).reduce((partialSum, a) => partialSum + a, 0), color: 'grape' },
                                 { value: 100 * questionPointer?.result?.did_not_consider! / Object.values(questionPointer?.result!).reduce((partialSum, a) => partialSum + a, 0), color: 'red' },
                             ]}
-                        />
+                        />  
                         <Text>
-                            to consider enrolling in University of the East!
+                            likely to be <Text component="span" fw="bold">{mapping[(Object.keys(questionPointer?.result ?? {}).reduce((a, b) => (questionPointer?.result?.[a]) > questionPointer?.result?.[b] ? a : b))]}</Text> to enroll in University of the East!
                         </Text>
                     </Stack>
 
